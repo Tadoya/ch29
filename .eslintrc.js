@@ -1,17 +1,144 @@
+const NOTI = "warn" // general
+const SEVERE = true // error switch
+
+const POSSIBLY_ERROR = SEVERE ? "error" : NOTI
+
 module.exports = {
   root: true,
   env: {
     node: true
   },
-  'extends': [
-    'plugin:vue/essential',
-    'eslint:recommended'
+  "extends": [
+    "plugin:vue/recommended",
+    "eslint:recommended"
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    "no-console": "off",
+    "no-debugger": "off",
+    "vue/html-self-closing": "off",
+    "vue/html-closing-bracket-spacing": "off",
+    "vue/max-attributes-per-line": "off",
+    "vue/mustache-interpolation-spacing": NOTI,
+    "vue/singleline-html-element-content-newline": "off",
+    "vue/no-v-html": "off",
+    "vue/arrow-spacing": NOTI,
+    "vue/component-name-in-template-casing": NOTI,
+    "vue/no-restricted-syntax": NOTI,
+    "vue/require-direct-export": NOTI,
+    "vue/v-on-function-call": NOTI,
+    // Possible Errors
+    "require-atomic-updates": POSSIBLY_ERROR,
+    // Best Practices
+    "array-callback-return": NOTI,
+    "class-methods-use-this": NOTI,
+    "consistent-return": NOTI,
+    "curly": NOTI,
+    "default-case": NOTI,
+    "dot-location": [NOTI, "property"],
+    "dot-notation": NOTI,
+    "no-caller": NOTI,
+    "no-div-regex": NOTI,
+    "no-else-return": [NOTI, { allowElseIf: false }],
+    "no-empty-function": NOTI,
+    "no-eq-null": NOTI,
+    "no-eval": POSSIBLY_ERROR,
+    "no-extra-bind": NOTI,
+    "no-floating-decimal": NOTI,
+    "no-implied-eval": NOTI,
+    "no-iterator": NOTI,
+    "no-lone-blocks": NOTI,
+    "no-loop-func": NOTI,
+    "no-multi-spaces": [NOTI, { ignoreEOLComments: true }],
+    "no-multi-str": NOTI,
+    "no-new-func": POSSIBLY_ERROR,
+    "no-new-wrappers": NOTI,
+    "no-octal": NOTI,
+    "no-octal-escape": NOTI,
+    "no-param-reassign": NOTI,
+    "no-proto": NOTI,
+    "no-restricted-properties": [POSSIBLY_ERROR, {
+      "object": "example_obj",
+      "property": "example_property",
+      "message": "example message"
+    }],
+    "no-return-assign": NOTI,
+    "no-return-await": NOTI,
+    "no-script-url": NOTI,
+    "no-self-compare": NOTI,
+    "no-sequences": NOTI,
+    "no-throw-literal": NOTI,
+    "no-unmodified-loop-condition": NOTI,
+    "no-useless-call": NOTI,
+    "no-void": NOTI,
+    "no-with": NOTI,
+    "prefer-promise-reject-errors": NOTI,
+    "require-await": NOTI,
+    "vars-on-top": NOTI,
+    "wrap-iife": [NOTI, "inside"],
+    "yoda": NOTI,
+    // Variables
+    "no-shadow": [NOTI, { "builtinGlobals": true }],
+    "no-unused-vars": NOTI, // default : error -> change : warn
+    "no-use-before-define": NOTI,
+    // Stylistic Issues
+    "array-bracket-spacing": NOTI,
+    "block-spacing": NOTI,
+    "brace-style": [NOTI, "1tbs", { "allowSingleLine": true }],
+    "comma-spacing": NOTI,
+    "comma-style": NOTI,
+    "computed-property-spacing": NOTI,
+    "func-call-spacing": NOTI,
+    "func-style": [NOTI, "declaration", { "allowArrowFunctions": true }],
+    "implicit-arrow-linebreak": NOTI,
+    "indent": [
+      NOTI, 
+      2, 
+      { "SwitchCase": 1, 
+        "VariableDeclarator": "first",
+        "MemberExpression": "off" }],
+    "key-spacing": NOTI,
+    "keyword-spacing": NOTI,
+    "lines-around-comment": NOTI,
+    "max-params": [NOTI, 4],
+    "new-cap": [NOTI, {"capIsNew": false}],
+    "new-parens": NOTI,
+    "newline-per-chained-call": NOTI,
+    "no-lonely-if": NOTI,
+    "no-multi-assign": NOTI,
+    "no-multiple-empty-lines": [NOTI, {"max": 3}],
+    "no-whitespace-before-property": NOTI,
+    "object-curly-spacing": [NOTI, "always", { "arraysInObjects": false, "objectsInObjects": false }],
+    "padding-line-between-statements": [
+      NOTI,
+      { "blankLine": "always", "prev": "*", "next": "return" },
+      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
+      { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] }
+    ],
+    "prefer-object-spread": NOTI,
+    "quote-props": [NOTI, "consistent"],
+    "semi": [NOTI, "never"],
+    "space-before-blocks": NOTI,
+    "space-before-function-paren": [NOTI, { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
+    "space-infix-ops": NOTI,
+    "space-unary-ops": [NOTI, { "words": true, "nonwords": false }],
+    "switch-colon-spacing": NOTI,
+    // ECMAScript 6
+    "arrow-parens": NOTI,
+    "arrow-spacing": NOTI,
+    "generator-star-spacing": [NOTI, { "before": true, "after": false }],
+    "no-confusing-arrow": NOTI,
+    "no-duplicate-imports": NOTI,
+    "no-useless-computed-key": NOTI,
+    "no-useless-rename": NOTI,
+    "no-var": NOTI,
+    "prefer-const": NOTI,
+    "prefer-rest-params": NOTI,
+    "rest-spread-spacing": NOTI,
+    "symbol-description": NOTI,
+    "template-curly-spacing": NOTI,
+    "yield-star-spacing": [NOTI, "before"]
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: "babel-eslint"
   }
 }
