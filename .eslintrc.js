@@ -25,7 +25,6 @@ module.exports = {
     "vue/component-name-in-template-casing": NOTI,
     "vue/no-restricted-syntax": NOTI,
     "vue/require-direct-export": NOTI,
-    "vue/v-on-function-call": NOTI,
     // Possible Errors
     "require-atomic-updates": POSSIBLY_ERROR,
     // Best Practices

@@ -5,7 +5,7 @@
       height="50"
     >
       <v-layout row fill-height align-center>
-        <span class="absolute subheading font-weight-medium pl-2"><v-icon>calendar_today</v-icon> 채널스물아홉TV</span>
+        <span class="absolute subheading font-weight-medium pl-2"><v-icon>play_circle_outline</v-icon> 채널스물아홉TV</span>
       </v-layout>
     </v-card>
     <v-card class="ma-1">

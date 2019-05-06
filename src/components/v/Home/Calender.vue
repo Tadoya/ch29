@@ -30,7 +30,7 @@
                 <span
                   @click="menu1=true"
                 >
-                  {{ date }}
+                  {{ getDateForm(date) }}
                 </span>
               </v-btn>
             </template>
@@ -63,12 +63,23 @@
           class="pa-3 ma-1"
           height="250"
         >
-          <v-layout row wrap fill-height justify-space-between>
-            <v-flex xs12 class="mb-2">
+          <v-layout row wrap>
+            <v-flex xs12 class="mb-3">
               <span class="subheading">청년 정책 일정</span>
             </v-flex>
             <v-flex xs12>
-              <v-textarea
+              <v-card height="180" flat class="outline">
+                <v-layout column fill-height align-start justify-start>
+                  <span
+                    v-for="item in scheduledData" :key="item.title"
+                    class="ma-2 pointer"
+                    @click="onClickPolicy(item)"
+                  >
+                    {{ item.contents }}
+                  </span>
+                </v-layout>
+              </v-card>
+              <!-- <v-textarea
                 v-model="scheduledData"
                 outline
                 single-line
@@ -76,7 +87,7 @@
                 no-resize
                 readonly
                 rows="8"
-              ></v-textarea>
+              ></v-textarea> -->
             </v-flex>
           </v-layout>
         </v-card>
@@ -90,7 +101,17 @@
 export default {
   data() {
     return {
-      scheduledData: `[SH공사]행복주택\n ~ 190415 @SH공사\n\n청년수당\n ~ 190415 @서울시`,
+      // scheduledData: `[SH공사]행복주택\n ~ 190415 @SH공사\n\n청년수당\n ~ 190415 @서울시`,
+      scheduledData: [
+        {
+          title: '행복주택',
+          contents: `[SH공사]행복주택\n ~ 190415 @SH공사`
+        },
+        {
+          title: '청년수당',
+          contents: `청년수당\n ~ 190415 @서울시`
+        }
+      ],
       today: `2019-01-01`,
       date: `2019-01-01`,
       menu1: false,
@@ -99,7 +120,23 @@ export default {
   mounted() {
     this.today = this.$refs.calendar.getNow().date
     this.date = this.today
-    console.log(this.$refs.calendar.getNow())
+  },
+  methods: {
+    getDateForm(date) {
+      const splitedDate = date.split('-')
+      const year = splitedDate[0]
+      const month = splitedDate[1]
+
+      return `${year}년 ${month}월`
+    },
+    onClickPolicy(item) {
+      this.$router.push({
+        name: 'details',
+        query: {
+          title: item.title
+        }
+      })
+    }
   }
 }
 </script>
@@ -107,5 +144,9 @@ export default {
 <style scope>
   .absolute{
     position: absolute;
+  }
+  .outline{
+    border:solid 2px;
+    border-color: black !important;
   }
 </style>

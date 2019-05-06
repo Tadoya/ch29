@@ -10,8 +10,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Layout',
-      component: Layout
+      redirect: { name: 'home' },
+      component: Layout,
+      children: [
+        { path: 'home', name: 'home', component: () => import('@/views/Home.vue') },
+        { path: 'search', name: 'search', component: () => import('@/views/Search.vue') },
+        { path: 'details', name: 'details', component: () => import('@/views/Details.vue') },
+      ]
     },
     {
       path: '/login',
