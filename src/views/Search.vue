@@ -1,5 +1,5 @@
 <template>
-  <v-card id="search" flat>
+  <v-card id="search" flat class="mx-1">
     <v-layout row wrap align-start justify-start>
       <v-spacer/>
       <v-text-field

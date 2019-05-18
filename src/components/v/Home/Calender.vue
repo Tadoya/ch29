@@ -1,15 +1,20 @@
 <template>
   <v-layout column>
+    <!-- title -->
     <v-card
       class="ma-1"
       height="50"
     >
       <v-layout row wrap fill-height align-center>
-        <span class="absolute subheading font-weight-medium pl-2"><v-icon>calendar_today</v-icon> 캘린더</span>
-        <v-layout row wrap fill-height align-center justify-center>
+        <span
+          class="subheading font-weight-medium pl-2"
+          :class="breakpoint!=='xs'?'absolute':''"
+        ><v-icon>calendar_today</v-icon> 캘린더</span>
+        <v-layout row fill-height align-center justify-center>
           <v-btn
             icon
-            @click="$refs.calendar.prev()"
+            class="pa-0 ma-0"
+            @click="onClickArrow('prev')"
           >
             <v-icon>chevron_left</v-icon>
           </v-btn>
@@ -26,7 +31,10 @@
             min-width="290px"
           >
             <template v-slot:activator="{ on }">
-              <v-btn flat>
+              <v-btn
+                flat
+                class="pa-0 ma-0"
+              >
                 <span
                   @click="menu1=true"
                 >
@@ -34,60 +42,74 @@
                 </span>
               </v-btn>
             </template>
-            <v-date-picker v-model="date" no-title @input="menu1=false"></v-date-picker>
+            <v-date-picker v-model="month" no-title type="month" @input="setDateFromDatePicekr"></v-date-picker>
           </v-menu>
           <v-btn
             icon
-            @click="$refs.calendar.next()"
+            class="pa-0 ma-0"
+            @click="onClickArrow('next')"
           >
             <v-icon>chevron_right</v-icon>
           </v-btn>
         </v-layout>
+        <v-spacer v-if="breakpoint==='xs'"></v-spacer>
       </v-layout>
     </v-card>
+    <!-- contents -->
     <v-layout row wrap>
-      <v-flex xs12 sm6>
+      <!-- calender -->
+      <v-flex xs12 sm12 md6>
         <v-card
           class="ma-1"
-          height="250"
+          height="330"
         >
           <v-calendar
             ref="calendar"
             v-model="date"
+            class="pointer"
             :now="today"
-          />
+            @click:day="onClickOfDay"
+          >
+            <template v-slot:day="{ date }">
+              <v-layout
+                v-if="selectedDays.indexOf(date) > -1"
+                row wrap fill-height
+                class="success white--text"
+              >
+              <!-- schedule counted -->
+              </v-layout>
+            </template>
+          </v-calendar>
         </v-card>
       </v-flex>
-      <v-flex xs12 sm6>
+      <!-- policy schdule -->
+      <v-flex xs12 sm12 md6>
         <v-card
           class="pa-3 ma-1"
-          height="250"
+          height="330"
         >
           <v-layout row wrap>
             <v-flex xs12 class="mb-3">
               <span class="subheading">청년 정책 일정</span>
             </v-flex>
             <v-flex xs12>
-              <v-card height="180" flat class="outline">
+              <v-card height="250" flat class="outline">
                 <v-layout column fill-height align-start justify-start>
-                  <span
-                    v-for="item in scheduledData" :key="item.title"
-                    class="ma-2 pointer"
-                    @click="onClickPolicy(item)"
-                  >
-                    {{ item.contents }}
-                  </span>
+                  <v-hover v-for="item in scheduledData" :key="item.title">
+                    <div
+                      slot-scope="{ hover }"
+                      class="mx-2 my-2 pointer "
+                      @click="onClickPolicy(item)"
+                    >
+                      <span
+                        :class="{'blue--text': hover}"
+                      >
+                        {{ item.contents }}
+                      </span>
+                    </div>
+                  </v-hover>
                 </v-layout>
               </v-card>
-              <!-- <v-textarea
-                v-model="scheduledData"
-                outline
-                single-line
-                hide-details
-                no-resize
-                readonly
-                rows="8"
-              ></v-textarea> -->
             </v-flex>
           </v-layout>
         </v-card>
@@ -101,7 +123,17 @@
 export default {
   data() {
     return {
-      // scheduledData: `[SH공사]행복주택\n ~ 190415 @SH공사\n\n청년수당\n ~ 190415 @서울시`,
+      // title
+      month: `2019-01`,
+      menu1: false,
+      // calender
+      date: `2019-01-01`,
+      today: `2019-01-01`,
+      isMouseDown: false,
+      isStarted: false,
+      selectedDays: [],
+
+      // policy schedule
       scheduledData: [
         {
           title: '행복주택',
@@ -112,16 +144,29 @@ export default {
           contents: `청년수당\n ~ 190415 @서울시`
         }
       ],
-      today: `2019-01-01`,
-      date: `2019-01-01`,
-      menu1: false,
+    }
+  },
+  computed: {
+    breakpoint() {
+      return this.$vuetify.breakpoint.name
     }
   },
   mounted() {
     this.today = this.$refs.calendar.getNow().date
     this.date = this.today
+    this.month = this.today.slice(0, this.month.length)
   },
   methods: {
+    // title 
+    onClickArrow(v) {
+      if (v === 'prev') {
+        this.$refs.calendar.prev()
+      } else {
+        this.$refs.calendar.next()
+      }
+
+      this.month = this.date.slice(0, this.month.length)
+    },
     getDateForm(date) {
       const splitedDate = date.split('-')
       const year = splitedDate[0]
@@ -129,6 +174,97 @@ export default {
 
       return `${year}년 ${month}월`
     },
+    setDateFromDatePicekr() {
+      this.date = `${this.month}${this.date.slice(this.month.length)}`
+      this.menu1 = false
+    },
+
+    // calender
+    // onMousedownOfDay(e) {
+    //   const indexOfDate = this.selectedDays.indexOf(e.date)
+
+    //   this.selectedDays = []
+    //   if (indexOfDate > -1) {
+    //     this.selectedDays.splice(indexOfDate, 1)
+
+    //     return
+    //   }
+
+    //   this.selectedDays.push(e.date)
+    //   this.isMouseDown = true
+    // },
+    // onMouseupOfDay(e) {
+    //   if (!this.selectedDays.length) {
+    //     return
+    //   }
+
+    //   let startDay = this.selectedDays[0].split('-')[2] - 0
+    //   let endDay = e.day
+
+    //   if (startDay > endDay) {
+    //     endDay = startDay
+    //     startDay = e.day
+    //   }
+
+    //   for (let i = startDay; i <= endDay; ++i) {
+    //     const day = i < 10 ? `0${i}` : i
+
+    //     if (this.selectedDays.indexOf(`${this.month}-${day}`) < 0) {
+    //       this.selectedDays.push(`${this.month}-${day}`)
+    //     }
+    //   }
+
+    //   this.isMouseDown = false
+    // },
+    setStartDate(e) {
+      const indexOfDate = this.selectedDays.indexOf(e.date)
+
+      if (indexOfDate < 0) {
+        this.selectedDays.push(e.date)
+      } 
+    },
+    setEndDate(e) {
+      if (!this.selectedDays.length) {
+        return
+      }
+
+      let startDay = this.selectedDays[0].split('-')[2] - 0
+      let endDay = e.day
+
+      if (startDay > endDay) {
+        endDay = startDay
+        startDay = e.day
+      }
+
+      for (let i = startDay; i <= endDay; ++i) {
+        const day = i < 10 ? `0${i}` : i
+
+        if (this.selectedDays.indexOf(`${this.month}-${day}`) < 0) {
+          this.selectedDays.push(`${this.month}-${day}`)
+        }
+      }
+    },
+    onClickOfDay(e) {
+      const indexOfDate = this.selectedDays.indexOf(e.date)
+      
+      if (indexOfDate > -1) {
+        // this.selectedDays.splice(indexOfDate, 1)
+        this.selectedDays = []
+        this.isStarted = false
+
+        return
+      }
+
+      if (!this.isStarted) {
+        this.setStartDate(e)
+        this.isStarted = true
+      } else { 
+        this.setEndDate(e)
+        this.isStarted = false
+      }
+    },
+
+    // policy schdule
     onClickPolicy(item) {
       this.$router.push({
         name: 'details',
@@ -136,7 +272,7 @@ export default {
           title: item.title
         }
       })
-    }
+    },
   }
 }
 </script>

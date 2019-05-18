@@ -48,7 +48,7 @@
           sm7
         >
           <v-card class="mx-1 my-1 blue-grey lighten-5">
-            <v-layout column fill-height justify-space-between>
+            <v-layout column fill-height justify-space-between class="pt-2">
               <v-layout
                 v-for="key in Object.keys(menu)" :key="key"
                 row fill-height

@@ -21,7 +21,7 @@
           dark
         >
           <v-card-text>
-            <span>&copy; 2018 Channel 29 - All Rights reserved</span>
+            <span>&copy; 2019 Channel 29 - All Rights reserved</span>
           </v-card-text>
         </v-card>
       </v-flex>      

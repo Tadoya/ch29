@@ -75,7 +75,8 @@
             <v-layout row fill-height align-center justify-center>
               <v-text-field
                 v-model="search"
-                class="ml-3 mr-1 subheading"
+                class="ml-3 mr-1"
+                :class="breakpoint==='xs'?'caption':'subheading'"
                 placeholder="청년 정책을 검색해보세요!"
                 outline
                 single-line
@@ -85,15 +86,19 @@
               <v-btn
                 large round :loading="isSearching"
                 color="success" class="mx-1"
+                :icon="breakpoint==='xs'"
                 @click="onSearch"
               >
-                검색
+                <v-icon>search</v-icon>
+                <span v-if="breakpoint !== 'xs'" class="ml-2">검색</span>
               </v-btn>
               <v-btn
                 large round dark
                 color="blue darken-4" class="mx-1"
+                :icon="breakpoint==='xs'"
               >
-                로그인
+                <v-icon>person</v-icon>
+                <span v-if="breakpoint !== 'xs'" class="ml-2">로그인</span>
               </v-btn>
             </v-layout>
           </v-flex>
@@ -108,19 +113,21 @@
         </v-layout>
         <v-layout
           v-if="isHome"
-          row wrap justify-center class="mb-2"
+          row
+          :justify-center="breakpoint!=='xs'"
+          :justify-space-between="breakpoint==='xs'"
+          class="mb-2"
+          style="overflow:auto;"
         >
           <v-chip
             v-for="item in categories" :key="item.text"
             outline
-            :color="(selectedCategory===item.value)?`green`:`black`"
+            :color="isSelectedCategory(item)?`green lighten-2`:`black`"
             class="pointer"
-            :class="{ 'mx-3': breakpoint!==`xs`, 'mt-2': breakpoint===`xs` }"
-            :selected="selectedCategory===item.value"
-            :small="breakpoint===`xs`"
+            :class="{ 'mx-3': breakpoint!==`xs` }"
             @click.stop="onClickChip(item)"
           >
-            <span :class="'captionj'">{{ item.text }}</span>
+            <span class="caption">{{ item.text }}</span>
           </v-chip>
         </v-layout>
       </v-layout>
@@ -157,7 +164,7 @@ export default {
         { text: `주거`, value: `residence` },
         { text: `금융`, value: `finance` },
       ],
-      selectedCategory: `all`,
+      selectedCategories: ['all']
     }
   },
   computed: {
@@ -197,12 +204,42 @@ export default {
   },
   methods: {
     onClickChip(item) {
-      this.selectedCategory = item.value
+      if (item.value === 'all') {
+        this.selectedCategories = ['all']
+
+        return
+      } 
+      
+      const indexOfItem = this.selectedCategories.indexOf(item.value)
+
+      if (indexOfItem > -1) {
+        this.selectedCategories.splice(indexOfItem, 1)
+        if (!this.selectedCategories.length) {
+          this.selectedCategories = ['all']
+        }
+      } else {
+        if (this.selectedCategories.indexOf('all') > -1) {
+          this.selectedCategories.splice(this.selectedCategories.indexOf('all'))
+        }
+        this.selectedCategories.push(item.value)
+        if (this.selectedCategories.length === this.categories.length - 1) {
+          this.selectedCategories = ['all']
+        }
+      }
+
     },
     onSearch() {
       if (!this.search) { return }
-      
       this.$router.push({ name: 'search', query: { keyword: this.search }})
+    },
+    isSelectedCategory(item) {
+      let result = false
+
+      if (this.selectedCategories.indexOf(item.value) > -1) {
+        result = true
+      }
+
+      return result
     }
     // onScroll() {
     //   this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
@@ -234,7 +271,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .fixed {
     position: fixed;
     top:55px !important;
