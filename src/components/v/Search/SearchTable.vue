@@ -16,8 +16,8 @@
       <template slot="items" slot-scope="props">
         <tr class="pointer" @click="onClick(props.item)">
           <td class="caption text-xs-center number px-1">{{ props.item.number }}</td>
-          <td class="caption text-xs-center title px-1">{{ props.item.title }}</td>
-          <td class="caption text-truncate content px-2">{{ props.item.contents }}</td>
+          <td class="caption text-xs-center title px-1">{{ props.item.policy_name }}</td>
+          <td class="caption text-truncate content px-2">{{ props.item.policy_intro }}</td>
           <td class="caption text-xs-center target px-1">{{ props.item.target }}</td>
           <td class="caption text-xs-center text-no-wrap px-1">{{ props.item.condition }}</td>
         </tr>
@@ -60,14 +60,14 @@ export default {
           text: '사업명',
           align: 'center',
           sortable: false,
-          value: 'title',
+          value: 'policy_name',
           class: 'px-1'
         },
         {
           text: '사업소개',
           align: 'left',
           sortable: false,
-          value: 'contents',
+          value: 'policy_intro',
           class: 'px-2'
         },
         { 

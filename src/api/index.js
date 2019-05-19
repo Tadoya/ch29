@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const domain = ''
+// const baseUri = 'http://ch29.kr'
+const baseUri = 'http://58.227.252.242'
+const port = 8000
+const domain = `${baseUri}:${port}/`
+
 
 const request = {
   get(path) {
@@ -14,5 +18,11 @@ const request = {
   },
   put(path, data) {
     return axios.put(`${domain + path}`, data)
+  }
+}
+
+export const search = {
+  read(keyword) {
+    return request.get(`search?keyword=${keyword}`)
   }
 }

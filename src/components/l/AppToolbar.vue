@@ -77,7 +77,7 @@
                 v-model="search"
                 class="ml-3 mr-1"
                 :class="breakpoint==='xs'?'caption':'subheading'"
-                placeholder="청년 정책을 검색해보세요!"
+                placeholder="청년 정책을 검색하세요! ex)창업, 행복주택"
                 outline
                 single-line
                 hide-details
