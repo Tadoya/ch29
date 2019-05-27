@@ -124,10 +124,9 @@ export default {
     onClick(item) {
       this.$router.push({
         name: 'details',
-        query: {
-          keyword: this.keyword,
-          title: item.title
-        }
+        params: {
+          id: item.id
+        },
       })
     }
   }

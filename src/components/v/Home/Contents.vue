@@ -25,8 +25,7 @@
           hide-slider
         >
           <v-tab
-            v-for="item in items"
-            :key="item.title"
+            v-for="(item, index) in items" :key="`contents${index}`"
           >
             <v-card flat>
               <v-card-title class="px-1 pt-0 pb-2">
@@ -72,46 +71,16 @@
 
 <script>
 export default {
+  props: {
+    items: { type: Array, required: false, default: () => [{
+      src: "",
+      title: "",
+      description: ""
+    }]}
+  },
   data() {
     return {
       contentPosition: null,
-      items: [
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtIC6jDhAKEsHjj0Q-5FIwCI",
-          title: "청년정책 브리핑",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당\n1\n2\n3'
-        },
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtJnLyBsr3aSoASfuktJj1j0",
-          title: "다섯명의 청년 이야기1",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당'
-        },
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtJnLyBsr3aSoASfuktJj1j0",
-          title: "다섯명의 청년 이야기2",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당'
-        },
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtJnLyBsr3aSoASfuktJj1j0",
-          title: "다섯명의 청년 이야기3",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당'
-        },
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtJnLyBsr3aSoASfuktJj1j0",
-          title: "다섯명의 청년 이야기4",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당'
-        },
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtJnLyBsr3aSoASfuktJj1j0",
-          title: "다섯명의 청년 이야기5",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당'
-        },
-        {
-          src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtJnLyBsr3aSoASfuktJj1j0",
-          title: "다섯명의 청년 이야기6",
-          description: '한달에 150만원 받고 정국이가 신난 이유\n#취업 #실업수당'
-        },
-      ]
     }
   },
   mounted() {

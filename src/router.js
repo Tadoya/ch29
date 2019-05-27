@@ -15,7 +15,7 @@ export default new Router({
       children: [
         { path: 'home', name: 'home', component: () => import('@/views/Home.vue') },
         { path: 'search', name: 'search', component: () => import('@/views/Search.vue') },
-        { path: 'details', name: 'details', component: () => import('@/views/Details.vue') },
+        { path: 'details/:id', name: 'details', component: () => import('@/views/Details.vue') },
       ]
     },
     {

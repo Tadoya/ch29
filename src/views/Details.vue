@@ -4,14 +4,14 @@
     <v-card id="details" flat>
       <v-card class="mb-1 mx-1">
         <v-layout column class="px-3 py-2">
-          <span class="title my-1 grey--text">주거</span>
-          <span class="title my-1">{{ $route.query.title }}</span>
+          <span class="title mt-1 mb-2 grey--text">{{ contents.category }}</span>
+          <span class="title my-1">{{ contents.title }}</span>
         </v-layout>
       </v-card>
       <v-layout row wrap>
         <v-flex xs12 sm5 d-flex>
           <v-card class="mx-1 my-1">
-            <v-layout row wrap fill-height justify-center>
+            <v-layout row wrap justify-center>
               <div
                 v-if="contents.media.type==='video'"
                 class="iframe-container ma-1"
@@ -40,6 +40,17 @@
                   <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
                 </v-layout>
               </v-img>
+              <v-img
+                v-else
+                :src="require('@/assets/ch29.jpg')"
+                class="ma-5"
+                contain
+              >
+              </v-img>
+              <span
+                v-if="contents.media.name"
+                class="body-1 pa-3"
+              >{{ contents.media.name }}</span>
             </v-layout>
           </v-card>
         </v-flex>
@@ -50,7 +61,7 @@
           <v-card class="mx-1 my-1 blue-grey lighten-5">
             <v-layout column fill-height justify-space-between class="pt-2">
               <v-layout
-                v-for="key in Object.keys(menu)" :key="key"
+                v-for="(key, index) in Object.keys(menu)" :key="`detail${index}`"
                 row fill-height
               > 
                 <v-flex :class="breakpoint==='xs'?'xs4':'xs3'">
@@ -88,6 +99,7 @@
 
 <script>
 import ImageDialog from '@/components/u/dialog/ImageDialog'
+import { details } from '@/api'
 
 export default {
   components: {
@@ -100,6 +112,8 @@ export default {
         image: ''
       },
       contents: {
+        category: "",
+        title: "",
         businessIntro: `사업소개에 대한 내용들`,
         target: `단독세대주인 청년계층`,
         receivingPeriod: `2019.05.01 ~ 2019.05.08`,
@@ -111,6 +125,7 @@ export default {
         media: {
           type: 'video',
           src: "https://www.youtube.com/embed?listType=playlist&list=PLQceRxs7JHtIC6jDhAKEsHjj0Q-5FIwCI",
+          name: ""
         }
       },
       menu: {
@@ -130,8 +145,43 @@ export default {
     breakpoint() {
       return this.$vuetify.breakpoint.name
     },
+    contentId() {
+      return this.$route.params.id
+    }
+  },
+  created() {
+    this.readData()
   },
   methods: {
+    readData() {
+      details.read(this.contentId)
+      .then((response) => {
+        const data = response.data
+
+        this.menu.businessIntro = `${data.item_type ? data.item_type : "사업"}소개`
+
+        this.contents = {
+          category: data.category ? data.category : "",
+          title: data.policy_name ? data.policy_name : "",
+          businessIntro: data.policy_intro ? data.policy_intro : "",
+          target: data.target ? data.target : "",
+          receivingPeriod: `${data.receive_stdt.split('T')[0]} ~ ${data.receive_eddt.split('T')[0]}`,
+          businessPeriod: `${data.policy_stdt.split('T')[0]} ~ ${data.policy_eddt.split('T')[0]}`,
+          details: data.support_info ? data.support_info : "",
+          question: data.qna ? data.qna : "",
+          tips: data.tip ? data.tip : "",
+          hash: data.hash ? data.hash : "",
+          media: {
+            type: data.url_type ? data.url_type : "",
+            src: data.url ? data.url : "",
+            name: data.url_name ? data.url_name : ""
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
     imgClickEvent(item) {
       this.imageDialogConfig.src = item.content.src
       this.imageDialogConfig.isActive = true

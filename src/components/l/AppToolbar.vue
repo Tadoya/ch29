@@ -31,7 +31,7 @@
               <v-spacer></v-spacer>
               <v-toolbar-items class="opacity-3">
                 <v-btn
-                  v-for="(item, index) in menus" :key="index"
+                  v-for="(item, index) in menus" :key="`menu${index}`"
                   class="hidden-xs-only"
                   flat :dark="!isScrollingUp"
                 >
@@ -120,14 +120,14 @@
           style="overflow:auto;"
         >
           <v-chip
-            v-for="item in categories" :key="item.text"
+            v-for="(item, index) in categories" :key="`category${index}`"
             outline
             :color="isSelectedCategory(item)?`green lighten-2`:`black`"
             class="pointer"
             :class="{ 'mx-3': breakpoint!==`xs` }"
             @click.stop="onClickChip(item)"
           >
-            <span class="caption">{{ item.text }}</span>
+            <span class="caption">{{ item }}</span>
           </v-chip>
         </v-layout>
       </v-layout>
@@ -156,15 +156,18 @@ export default {
       ],
       search: '',
       isSearching: false,
+      // categories: [
+      //   { text: `전체`, value: `전체` },
+      //   { text: `취업/직장`, value: `취업/직장` },
+      //   { text: `창업`, value: `창업` },
+      //   { text: `복지/문화`, value: `복지/문화` },
+      //   { text: `주거`, value: `주거` },
+      //   { text: `금융`, value: `금융` },
+      // ],
       categories: [
-        { text: `전체`, value: `all` },
-        { text: `취업/직장`, value: `job` },
-        { text: `창업`, value: `startup` },
-        { text: `복지/문화`, value: `culture` },
-        { text: `주거`, value: `residence` },
-        { text: `금융`, value: `finance` },
+        `전체`, `취업/직장`, `창업`, `복지/문화`, `주거`, `금융`
       ],
-      selectedCategories: ['all']
+      selectedCategories: ['전체']
     }
   },
   computed: {
@@ -204,29 +207,30 @@ export default {
   },
   methods: {
     onClickChip(item) {
-      if (item.value === 'all') {
-        this.selectedCategories = ['all']
+      if (item === '전체') {
+        this.selectedCategories = ['전체']
+        this.$store.commit('SET_CATEGORY_SELECTED', this.selectedCategories)
 
         return
       } 
       
-      const indexOfItem = this.selectedCategories.indexOf(item.value)
+      const indexOfItem = this.selectedCategories.indexOf(item)
 
       if (indexOfItem > -1) {
         this.selectedCategories.splice(indexOfItem, 1)
         if (!this.selectedCategories.length) {
-          this.selectedCategories = ['all']
+          this.selectedCategories = ['전체']
         }
       } else {
-        if (this.selectedCategories.indexOf('all') > -1) {
-          this.selectedCategories.splice(this.selectedCategories.indexOf('all'))
+        if (this.selectedCategories.indexOf('전체') > -1) {
+          this.selectedCategories.splice(this.selectedCategories.indexOf('전체'))
         }
-        this.selectedCategories.push(item.value)
+        this.selectedCategories.push(item)
         if (this.selectedCategories.length === this.categories.length - 1) {
-          this.selectedCategories = ['all']
+          this.selectedCategories = ['전체']
         }
       }
-
+      this.$store.commit('SET_CATEGORY_SELECTED', this.selectedCategories)
     },
     onSearch() {
       if (!this.search) { return }
@@ -235,7 +239,7 @@ export default {
     isSelectedCategory(item) {
       let result = false
 
-      if (this.selectedCategories.indexOf(item.value) > -1) {
+      if (this.selectedCategories.indexOf(item) > -1) {
         result = true
       }
 

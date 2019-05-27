@@ -94,18 +94,21 @@
             </v-flex>
             <v-flex xs12>
               <v-card height="250" flat class="outline">
-                <v-layout column fill-height align-start justify-start>
-                  <v-hover v-for="item in scheduledData" :key="item.title">
+                <v-layout
+                  column fill-height align-start justify-start
+                  class="calender__policy__wrapper"
+                >
+                  <v-hover v-for="(item, index) in items" :key="`schedule${index}`">
                     <div
                       slot-scope="{ hover }"
-                      class="mx-2 my-2 pointer "
+                      class="mx-2 mt-2 pointer"
                       @click="onClickPolicy(item)"
                     >
-                      <span
+                      <p
                         :class="{'blue--text': hover}"
+                        v-html="item.contents"
                       >
-                        {{ item.contents }}
-                      </span>
+                      </p>
                     </div>
                   </v-hover>
                 </v-layout>
@@ -121,6 +124,18 @@
 <script>
 
 export default {
+  props: {
+    items: { type: Array, required: false, default: () => [
+      {
+        contents: `[SH공사]행복주택\n ~ 190415 @SH공사`,
+        id: 1
+      },
+      {
+        contents: `청년수당\n ~ 190415 @서울시`,
+        id: 2
+      }
+    ]}
+  },
   data() {
     return {
       // title
@@ -133,17 +148,6 @@ export default {
       isStarted: false,
       selectedDays: [],
 
-      // policy schedule
-      scheduledData: [
-        {
-          title: '행복주택',
-          contents: `[SH공사]행복주택\n ~ 190415 @SH공사`
-        },
-        {
-          title: '청년수당',
-          contents: `청년수당\n ~ 190415 @서울시`
-        }
-      ],
     }
   },
   computed: {
@@ -151,10 +155,16 @@ export default {
       return this.$vuetify.breakpoint.name
     }
   },
+  watch: {
+    month(v) {
+      this.$store.commit(`SET_MONTH`, v)
+    }
+  },
   mounted() {
     this.today = this.$refs.calendar.getNow().date
     this.date = this.today
     this.month = this.today.slice(0, this.month.length)
+    this.$store.commit(`SET_TODAY`, this.today)
   },
   methods: {
     // title 
@@ -178,44 +188,6 @@ export default {
       this.date = `${this.month}${this.date.slice(this.month.length)}`
       this.menu1 = false
     },
-
-    // calender
-    // onMousedownOfDay(e) {
-    //   const indexOfDate = this.selectedDays.indexOf(e.date)
-
-    //   this.selectedDays = []
-    //   if (indexOfDate > -1) {
-    //     this.selectedDays.splice(indexOfDate, 1)
-
-    //     return
-    //   }
-
-    //   this.selectedDays.push(e.date)
-    //   this.isMouseDown = true
-    // },
-    // onMouseupOfDay(e) {
-    //   if (!this.selectedDays.length) {
-    //     return
-    //   }
-
-    //   let startDay = this.selectedDays[0].split('-')[2] - 0
-    //   let endDay = e.day
-
-    //   if (startDay > endDay) {
-    //     endDay = startDay
-    //     startDay = e.day
-    //   }
-
-    //   for (let i = startDay; i <= endDay; ++i) {
-    //     const day = i < 10 ? `0${i}` : i
-
-    //     if (this.selectedDays.indexOf(`${this.month}-${day}`) < 0) {
-    //       this.selectedDays.push(`${this.month}-${day}`)
-    //     }
-    //   }
-
-    //   this.isMouseDown = false
-    // },
     setStartDate(e) {
       const indexOfDate = this.selectedDays.indexOf(e.date)
 
@@ -268,8 +240,8 @@ export default {
     onClickPolicy(item) {
       this.$router.push({
         name: 'details',
-        query: {
-          title: item.title
+        params: {
+          id: item.id
         }
       })
     },
@@ -284,5 +256,8 @@ export default {
   .outline{
     border:solid 2px;
     border-color: black !important;
+  }
+  .calender__policy__wrapper{
+    overflow: auto;
   }
 </style>

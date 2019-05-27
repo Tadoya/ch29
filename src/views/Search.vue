@@ -41,7 +41,8 @@ export default {
           policy_name: '행복주택',
           policy_intro: `대중교통 이용이 편리한 곳에 짓는 공공임대 주택`,
           target: `대학생 / 청년 / 신혼부부`,
-          condition: `신청중`
+          condition: `신청중`,
+          id: 1
         },
       ],
       businessData: [
@@ -50,7 +51,8 @@ export default {
           policy_name: '역세권청년주택',
           policy_intro: '역세권 지하철 인근에 짓는 주택',
           target: '대학생 / 청년',
-          condition: '예정'
+          condition: '예정',
+          id: 2
         }
       ],
     }
@@ -62,14 +64,14 @@ export default {
   },
   watch: {
     keyword() {
-      this.getSearchData()
+      this.readSearchData()
     }
   },
   created() {
-    this.getSearchData()
+    this.readSearchData()
   },
   methods: {
-    getSearchData() {
+    readSearchData() {
       if (!this.keyword) { return }
 
       search.read(this.keyword)

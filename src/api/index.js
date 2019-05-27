@@ -26,3 +26,24 @@ export const search = {
     return request.get(`search?keyword=${keyword}`)
   }
 }
+
+export const main = {
+  readWithMonth(month, categories) {
+    return request.post(`main`, {
+      start_date: `${month}-01`,
+      end_date: `${month}-31`,
+      categories
+    })
+  },
+  readWithDate(start_date, end_date, categories) {
+    return request.post(`main`, {
+      start_date, end_date, categories
+    })
+  }
+}
+
+export const details = {
+  read(id) {
+    return request.get(`policy/${id}`)
+  }
+}
