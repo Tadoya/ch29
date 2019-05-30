@@ -5,6 +5,8 @@ const baseUri = 'http://58.227.252.242'
 const port = 8000
 const domain = `${baseUri}:${port}/`
 
+// axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded;application/json'
+
 
 const request = {
   get(path) {
@@ -29,9 +31,17 @@ export const search = {
 
 export const main = {
   readWithMonth(month, categories) {
+    const startDate = `${month}-01`
+    const splitedMonth = month.split('-')
+    const currentYear = splitedMonth[0]
+    const currentMonth = (splitedMonth[1] - 0) < 10 
+      ? `0${splitedMonth[1] - 0 + 1}` 
+      : (splitedMonth[1] - 0 + 1)
+    const endDate = `${currentYear}-${currentMonth}-01`
+
     return request.post(`main`, {
-      start_date: `${month}-01`,
-      end_date: `${month}-31`,
+      start_date: startDate,
+      end_date: endDate,
       categories
     })
   },

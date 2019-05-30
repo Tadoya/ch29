@@ -72,11 +72,11 @@
           >
             <template v-slot:day="{ date }">
               <v-layout
-                v-if="selectedDays.indexOf(date) > -1"
                 row wrap fill-height
-                class="success white--text"
+                class=""
+                :class="{'success white--text':selectedDays.indexOf(date) > -1}"
               >
-              <!-- schedule counted -->
+                <!-- <span class="caption grey--text">정책 수</span> -->
               </v-layout>
             </template>
           </v-calendar>
@@ -188,12 +188,15 @@ export default {
       this.date = `${this.month}${this.date.slice(this.month.length)}`
       this.menu1 = false
     },
+    // calender
     setStartDate(e) {
+      this.selectedDays = []
+
       const indexOfDate = this.selectedDays.indexOf(e.date)
 
       if (indexOfDate < 0) {
         this.selectedDays.push(e.date)
-      } 
+      }
     },
     setEndDate(e) {
       if (!this.selectedDays.length) {
@@ -215,15 +218,19 @@ export default {
           this.selectedDays.push(`${this.month}-${day}`)
         }
       }
+
+      this.$store.commit('SET_START_DATE', this.selectedDays[0])
+      this.$store.commit('SET_END_DATE', this.selectedDays[this.selectedDays.length - 1])
     },
     onClickOfDay(e) {
       const indexOfDate = this.selectedDays.indexOf(e.date)
       
       if (indexOfDate > -1) {
-        // this.selectedDays.splice(indexOfDate, 1)
         this.selectedDays = []
         this.isStarted = false
-
+        this.$store.commit('SET_START_DATE', "")
+        this.$store.commit('SET_END_DATE', "")
+        
         return
       }
 

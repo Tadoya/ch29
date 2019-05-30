@@ -12,7 +12,7 @@ const mutations = {
     state.startDate = val ? val : ""
   },
   SET_END_DATE(state, val) {
-    state.startDate = val ? val : ""
+    state.endDate = val ? val : ""
   },
 }
 

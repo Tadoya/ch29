@@ -9,7 +9,19 @@
       </v-layout>
     </v-card>
     <v-card class="ma-1">
-      <v-layout row fill-height justify-center align-center>
+      <v-card
+        v-if="!items.length"
+        height="280"
+        flat
+      >
+        <v-layout row align-center justify-center fill-height="">
+          <span class="title">준비된 영상 자료가 없습니다.</span>
+        </v-layout>
+      </v-card>
+      <v-layout
+        v-else
+        row fill-height justify-center align-center
+      >
         <v-btn
           icon
           small
@@ -19,7 +31,7 @@
         </v-btn>
         <v-tabs
           v-model="contentPosition"
-          style="max-width:calc(100% - 36px - 36px)"
+          style="max-width:calc(100% - 36px - 36px);"
           height="280"
           class="hide-arrows"
           hide-slider
