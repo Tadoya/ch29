@@ -77,11 +77,13 @@
                 v-model="search"
                 class="ml-3 mr-1"
                 :class="breakpoint==='xs'?'caption':'subheading'"
-                placeholder="청년 정책을 검색하세요! ex)창업, 행복주택"
+                placeholder="청년 정책을 검색하세요!"
                 outline
+                autofocus
                 single-line
                 hide-details
                 @keypress.enter="onSearch"
+                @focus="onFocus"
               ></v-text-field>
               <v-btn
                 large round :loading="isSearching"
@@ -231,6 +233,9 @@ export default {
         }
       }
       this.$store.commit('SET_CATEGORY_SELECTED', this.selectedCategories)
+    },
+    onFocus(e) {
+      e.target.select()
     },
     onSearch() {
       if (!this.search) { return }

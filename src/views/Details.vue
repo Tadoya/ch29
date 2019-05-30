@@ -78,9 +78,8 @@
                 </v-flex>
                 <v-textarea
                   v-model="contents[key]"
-                  class="caption"
+                  class="caption grey--text"
                   readonly
-                  disabled
                   rows="1"
                   full-width
                   auto-grow

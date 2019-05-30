@@ -60,12 +60,6 @@ export default {
       }
     }
   },
-  created() {
-    // this.readDataWithDate()
-    this.$nextTick(() => {
-      this.readDataWithMonth()
-    })
-  },
   methods: {
     readDataWithMonth() {
       main.readWithMonth(this.month, this.selectedCategories)
@@ -101,13 +95,14 @@ export default {
         const policyStartDate = this.calenderData[index].policy_stdt.split('T')[0]
         const policyEndDate = this.calenderData[index].policy_eddt.split('T')[0]
 
+        this.$set(this.calenderData[index], 'rStartDate', receiveStartDate)
+        this.$set(this.calenderData[index], 'rEndDate', receiveEndDate)
         this.$set(this.calenderData[index], 'contents', 
           `<b>${index - 0 + 1}. [${category} ${itemType}] ${title}</b><br>
           <span class="mx-3 caption">접수기간: ${receiveStartDate} ~ ${receiveEndDate}</span><br>
           <span class="mx-3 caption">${itemType}기간: ${policyStartDate} ~ ${policyEndDate}</span>`)
       }
 
-      this.contentData = []
       for (const index in data.url) {
         if (!data.url[index].url) {
           continue

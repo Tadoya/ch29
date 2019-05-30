@@ -68,15 +68,22 @@
             v-model="date"
             class="pointer"
             :now="today"
+            @click:date="onClickOfDay"
             @click:day="onClickOfDay"
           >
             <template v-slot:day="{ date }">
               <v-layout
-                row wrap fill-height
-                class=""
-                :class="{'success white--text':selectedDays.indexOf(date) > -1}"
+                v-if="date.slice(0, month.length) === month"
+                row wrap fill-height justify-center
               >
-                <!-- <span class="caption grey--text">정책 수</span> -->
+                <v-chip
+                  small class="pa-0 ma-0"
+                  :class="{'success white--text':selectedDays.indexOf(date) > -1}"
+                >
+                  <span class="caption">
+                    {{ `${countOfPolicy[date]?countOfPolicy[date]:0}` }}
+                  </span>
+                </v-chip>
               </v-layout>
             </template>
           </v-calendar>
@@ -147,7 +154,7 @@ export default {
       isMouseDown: false,
       isStarted: false,
       selectedDays: [],
-
+      countOfPolicy: {}
     }
   },
   computed: {
@@ -158,6 +165,15 @@ export default {
   watch: {
     month(v) {
       this.$store.commit(`SET_MONTH`, v)
+      this.countOfPolicy = {}
+    }, 
+    date(v) {
+      this.month = this.date.slice(0, this.month.length)
+    },
+    items(v) {
+      if (v.length) {
+        this.getCountOfPolicy()
+      }
     }
   },
   mounted() {
@@ -175,7 +191,7 @@ export default {
         this.$refs.calendar.next()
       }
 
-      this.month = this.date.slice(0, this.month.length)
+      this.selectedDays = []
     },
     getDateForm(date) {
       const splitedDate = date.split('-')
@@ -223,6 +239,12 @@ export default {
       this.$store.commit('SET_END_DATE', this.selectedDays[this.selectedDays.length - 1])
     },
     onClickOfDay(e) {
+      const selectedMonth = e.date.slice(0, this.month.length)
+      
+      if (this.month != selectedMonth) {
+        return
+      }
+
       const indexOfDate = this.selectedDays.indexOf(e.date)
       
       if (indexOfDate > -1) {
@@ -242,6 +264,23 @@ export default {
         this.isStarted = false
       }
     },
+    getCountOfPolicy() {
+      if (Object.keys(this.countOfPolicy).length) {
+        return
+      }
+      for (const item of this.items) {
+        const startDay = item.rStartDate.slice(this.month.length + 1) - 0
+        const endDay = item.rEndDate.slice(this.month.length + 1) - 0
+        
+        for (let i = startDay; i <= endDay; ++i) {
+          const day = i < 10 ? `0${i}` : i
+
+          this.countOfPolicy[`${this.month}-${day}`] =
+          this.countOfPolicy[`${this.month}-${day}`] ? this.countOfPolicy[`${this.month}-${day}`] + 1 : 1
+        }
+      }
+    },
+    
 
     // policy schdule
     onClickPolicy(item) {
